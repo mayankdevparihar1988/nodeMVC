@@ -7,7 +7,7 @@ const userRoutes = require('./routes/userRoutes');
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 
-const swaggerDocument = YAML.load(':/swagger.yaml');
+const swaggerDocument = YAML.load('./swagger.yaml');
 
 // to read the config
 dotEnv.config();
@@ -26,11 +26,17 @@ app.use(express.urlencoded({extended:true}));
 
 app.use('/api/v1/product',productRoutes);
 app.use('/api/v1/user',userRoutes);
-app.get('/',(req,res,next)=>{
 
-    res.send(`Hello from the node server `);
 
-})
+// API Documentation 
+if(process.env.NODE_ENV != 'production'){
+
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+}
+
+
+
 
 app.use(function(err,req,res,next){
 
