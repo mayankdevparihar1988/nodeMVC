@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 
-const productSchema = new mongoose.Schema({
-    name: String,
-    price: Number,
-    brand: String
+const userSchema = new mongoose.Schema({
+    email: String,
+    password: String
 },{
     timestamps: true,
     toObject: {
@@ -11,6 +10,7 @@ const productSchema = new mongoose.Schema({
             ret.id = ret._id;
             delete ret._id;
             delete ret.__v;
+            delete ret.password;
 
             return ret;
 
@@ -18,4 +18,4 @@ const productSchema = new mongoose.Schema({
     }
 });
 
-module.exports= mongoose.model('productModel',productSchema);
+module.exports= mongoose.model('User',userSchema);

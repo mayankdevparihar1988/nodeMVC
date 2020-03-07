@@ -3,6 +3,11 @@ const dotEnv = require('dotenv');
 const cors = require('cors');
 const dbConnection = require('./db/connection');
 const productRoutes = require('./routes/productRoutes');
+const userRoutes = require('./routes/userRoutes');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+
+const swaggerDocument = YAML.load(':/swagger.yaml');
 
 // to read the config
 dotEnv.config();
@@ -20,7 +25,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 
 app.use('/api/v1/product',productRoutes);
-
+app.use('/api/v1/user',userRoutes);
 app.get('/',(req,res,next)=>{
 
     res.send(`Hello from the node server `);

@@ -1,29 +1,20 @@
 const express = require('express');
-const productService = require('../service/productService');
 const router = express.Router();
 const constants = require('../constants');
+const joiSchmaValidation = require('../middleware/joiSchemaValidation');
+const productSchema = require('../apiSchema/productSchema');
+const productController= require('../controller/productController');
+const tokenValidation = require('../middleware/tokenValidation');
 
-router.post('/', (req,res)=>{
-
-    let response = {...constants.defaultServerRespose};
-    productService.createProduct(req.body).then((data)=>{
-
-        response.status = 201;
-        response.message= constants.productMessage.PRODUCT_CREATED;
-        response.body= data;
-        res.status(201).send(response);
+router.post('/', tokenValidation.validateToken,joiSchmaValidation.validateBody(productSchema.createProductSchema),productController.createProduct);
 
 
-    }).catch((error)=> {
+router.get('/:id',tokenValidation.validateToken,productController.getProductById);
 
-        response.message = error.message;
-        res.send(response);
-       
-    });
-    
-});
+router.put('/:id',tokenValidation.validateToken,joiSchmaValidation.validateBody(productSchema.updateProductSchema),productController.updateProduct);
 
+router.get('/',tokenValidation.validateToken,joiSchmaValidation.validateQueryParams(productSchema.getAllProductSchema),productController.getAllProduts);
 
-
+router.delete('/:id', tokenValidation.validateToken,productController.deleteProductById);
 
 module.exports= router;
